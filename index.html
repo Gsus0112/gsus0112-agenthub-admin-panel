@@ -729,11 +729,11 @@
     </main>
 </div>
 
-<!-- 4.5. Modal Overlay Reutilizable -->
+
 <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="modal-container">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="modal-backdrop"></div>
     <div class="relative bg-white dark:bg-slate-900 w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh] overflow-hidden" id="modal-content">
-        <!-- Encabezado del Modal -->
+        
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800">
             <h3 class="text-base font-bold text-slate-900 dark:text-slate-100" id="modal-title">Detalles</h3>
             <button class="modal-close text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -741,10 +741,10 @@
             </button>
         </div>
         
-        <!-- Cuerpo Dinámico del Modal -->
+        
         <div class="p-6 overflow-y-auto min-h-[160px]" id="modal-body">
             
-            <!-- Modal: Usuario (3.2.3) -->
+            
             <div class="hidden" id="modal-user-content">
                 <div class="flex items-center gap-4 mb-5">
                     <div class="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/40 text-primary dark:text-blue-300 flex items-center justify-center text-xl font-bold">U</div>
@@ -761,7 +761,7 @@
                 </ul>
             </div>
 
-            <!-- Modal: Configuración de Prompt (3.3.3) -->
+          
             <div class="hidden" id="modal-agent-config-content">
                 <div class="mb-4">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">System Prompt Editable</label>
@@ -770,7 +770,7 @@
                 </div>
             </div>
 
-            <!-- Modal: Skill (3.4.3) -->
+            
             <div class="hidden" id="modal-skill-content">
                 <h4 class="text-base font-bold text-slate-900 dark:text-slate-100 mb-2">Detalles Técnicos de la Skill</h4>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">Módulo de integración homologado. Expone endpoints internos autenticados y aislamiento en sandbox para ejecución no bloqueante.</p>
@@ -780,7 +780,7 @@
                 </div>
             </div>
 
-            <!-- Modal: Facturación Desglosada (3.5.3) -->
+            
             <div class="hidden" id="modal-contract-content">
                 <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 mb-3">Desglose de Facturación por Skill</h4>
                 <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-400">
@@ -792,7 +792,7 @@
                 </ul>
             </div>
             
-            <!-- Modal: Traza de Error (3.6.3) -->
+            
             <div class="hidden" id="modal-error-content">
                 <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 mb-2">Código Simulado de Excepción</h4>
                 <div class="bg-slate-100 dark:bg-slate-950 p-4 rounded-xl font-mono text-xs text-error overflow-x-auto whitespace-pre border border-red-200 dark:border-red-900/40">Exception in thread "agent-worker-0" java.net.SocketTimeoutException: Connect timed out
@@ -810,17 +810,17 @@
     </div>
 </div>
 
-<!-- JavaScript Vanilla (Sin Librerías Externas) -->
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Toggle de Modo Oscuro
+        
         const themeToggleBtn = document.getElementById('themeToggle');
         const htmlTag = document.documentElement;
         themeToggleBtn.addEventListener('click', () => {
             htmlTag.classList.toggle('dark');
         });
 
-        // 2. Navegación entre Vistas (Sidebar)
+        
         const navButtons = document.querySelectorAll('.nav-btn');
         const sections = document.querySelectorAll('.content-section');
 
@@ -844,7 +844,7 @@
             });
         });
 
-        // 3. Dropdowns de Acciones (Abre, cierra al clic y al clic fuera)
+        
         const dropdownBtns = document.querySelectorAll('.dropdown-btn');
         dropdownBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -873,7 +873,6 @@
             });
         });
 
-        // 4. Sistema de Modales Dinámicos
         const modalContainer = document.getElementById('modal-container');
         const modalTitle = document.getElementById('modal-title');
         const userContent = document.getElementById('modal-user-content');
@@ -890,7 +889,7 @@
                 const type = btn.getAttribute('data-modal-type');
                 modalTitle.textContent = title;
                 
-                // Ocultar todos los contenidos previos
+            
                 userContent.classList.add('hidden');
                 agentConfigContent.classList.add('hidden');
                 skillContent.classList.add('hidden');
@@ -924,7 +923,7 @@
         document.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', closeModal));
         document.getElementById('modal-backdrop').addEventListener('click', closeModal);
 
-        // 5. Acordeón Colapsable de Skills
+        
         document.querySelectorAll('.toggle-skills').forEach(btn => {
             btn.addEventListener('click', () => {
                 const drawer = btn.nextElementSibling;
