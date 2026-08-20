@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AgentHub Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#757684",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e3e1eb",
+                        "on-primary": "#ffffff",
+                        "background": "#fbf8ff",
+                        "on-primary-fixed-variant": "#173bab",
+                        "surface-container": "#eeedf7",
+                        "surface-tint": "#3755c3",
+                        "secondary": "#565e74",
+                        "on-background": "#1a1b22",
+                        "surface-dim": "#dad9e3",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "inverse-on-surface": "#f1f0fa",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#001453",
+                        "on-tertiary-container": "#aebcd5",
+                        "tertiary-fixed": "#d5e3fd",
+                        "primary-fixed": "#dde1ff",
+                        "surface-container-high": "#e8e7f1",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fbf8ff",
+                        "tertiary": "#273549",
+                        "secondary-container": "#dae2fd",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "primary-container": "#1e40af",
+                        "on-secondary-container": "#5c647a",
+                        "on-primary-container": "#a8b8ff",
+                        "inverse-primary": "#b8c4ff",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-container-highest": "#e3e1eb",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "surface-container-low": "#f4f2fc",
+                        "inverse-surface": "#2f3037",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#444653",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "primary": "#00288e",
+                        "outline-variant": "#c4c5d5",
+                        "secondary-fixed": "#dae2fd",
+                        "on-surface": "#1a1b22",
+                        "tertiary-container": "#3e4c60",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface": "#fbf8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "sidebar-width": "260px",
+                        "stack-md": "16px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "margin-desktop": "32px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "code": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "code": ["13px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: theme('colors.surface'); }
+        .dark ::-webkit-scrollbar-track { background: theme('colors.slate.900'); }
+        ::-webkit-scrollbar-thumb { background: theme('colors.surface-dim'); border-radius: theme('borderRadius.full'); }
+        .dark ::-webkit-scrollbar-thumb { background: theme('colors.slate.700'); }
+        ::-webkit-scrollbar-thumb:hover { background: theme('colors.outline'); }
+        
+        .transition-max-height { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out; }
+        .collapsible-content { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0; padding-bottom: 0; }
+        .collapsible-content.open { max-height: 500px; opacity: 1; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .modal-overlay { background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-background dark:bg-slate-950 text-on-surface dark:text-slate-200 font-body-md antialiased overflow-hidden flex h-screen">
+<!-- Sidebar Component -->
+<aside class="bg-surface dark:bg-slate-900 text-primary dark:text-inverse-primary font-body-md text-body-md fixed left-0 top-0 h-full w-sidebar-width border-r border-slate-200 dark:border-slate-800 flat no shadows flex flex-col h-full py-stack-lg z-50" id="sideNav">
+    <div class="px-gutter mb-stack-lg">
+        <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-on-primary-fixed-variant flex items-center gap-2">
+            <img alt="AgentHub Logo" class="w-8 h-8 rounded-lg object-cover" data-alt="A clean, minimalist vector logo featuring an abstract hexagonal hub structure with bright primary blue accents against a dark slate background, highly professional and corporate AI startup style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX8F8dhJATsNuJqlSwooUhxF_Zlu7JbvWmuw5CBbUq935D2As4MldA3V7iD1MfJZGvN1Wdy-4cHsdI5bojSvC34B8Bp79_dtKtH8NsrBtAJwn3yFsCbl1BZcwEyEErQwGsVpMslwX_0JF_f2TNowsjfgEw6yfhI4gkG8CXaqcvAKcnYgbGq0QJHLESRWtKeSajt5N4PK4pbCAriwqOvgq2slCiHQaMsdiDykzx6RF--OrNjfHP4nBkwA"/>
+            AgentHub
+        </h1>
+        <p class="text-label-md font-label-md text-secondary dark:text-secondary-fixed-dim mt-1 pl-10">Enterprise Admin</p>
+    </div>
+    <nav aria-label="Main Navigation" class="flex-1 px-4 overflow-y-auto">
+        <ul class="space-y-1">
+            <li>
+                <button aria-current="page" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary/10 text-primary border-l-2 border-primary font-bold active:scale-95 transition-transform" data-target="dashboard-section">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">dashboard</span>
+                    Dashboard
+                </button>
+            </li>
+            <li>
+                <button class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors duration-200 active:scale-95 transition-transform border-l-2 border-transparent" data-target="users-section">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">group</span>
+                    Users
+                </button>
+            </li>
+            <li>
+                <button class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors duration-200 active:scale-95 transition-transform border-l-2 border-transparent" data-target="agents-section">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">smart_toy</span>
+                    Agents
+                </button>
+            </li>
+            <li>
+                <button class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors duration-200 active:scale-95 transition-transform border-l-2 border-transparent" data-target="skills-section">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">extension</span>
+                    Skills
+                </button>
+            </li>
+            <li>
+                <button class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors duration-200 active:scale-95 transition-transform border-l-2 border-transparent" data-target="contracts-section">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">description</span>
+                    Contracts
+                </button>
+            </li>
+            <li>
+                <button class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors duration-200 active:scale-95 transition-transform border-l-2 border-transparent" data-target="errors-section">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">terminal</span>
+                    Error Log
+                </button>
+            </li>
+        </ul>
+    </nav>
+    <div class="px-4 mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
+        <button class="w-full mb-4 bg-primary-container text-on-primary font-label-md text-label-md py-2 rounded-lg hover:bg-primary transition-colors flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">help_center</span>
+            Support
+        </button>
+        <ul class="space-y-1">
+            <li>
+                <a class="flex items-center gap-3 px-4 py-2 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors duration-200" href="#">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">settings</span>
+                    Settings
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-3 px-4 py-2 rounded-lg text-error dark:text-error hover:bg-error-container/20 transition-colors duration-200" href="#">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[20px]">logout</span>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col ml-[260px] relative w-[calc(100%-260px)] h-full">
+    <!-- TopNavBar Component -->
+    <header class="bg-surface dark:bg-slate-900 text-primary dark:text-inverse-primary font-body-md text-body-md fixed top-0 right-0 z-40 h-16 border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none flex items-center justify-between px-margin-desktop w-[calc(100%-260px)] ml-auto">
+        <div class="flex-1 flex items-center max-w-md">
+            <div class="relative w-full">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary dark:text-secondary-fixed-dim pointer-events-none text-[20px]">search</span>
+                <input class="w-full pl-10 pr-4 py-2 bg-surface-container-low dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-full focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-on-surface dark:text-slate-200 placeholder:text-secondary/60 h-[36px]" placeholder="Search resources, logs, or documentation..." type="text"/>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <button aria-label="Toggle Dark Mode" class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-slate-800 rounded-full p-2 focus:ring-2 focus:ring-primary/20 transition-all active:scale-95 flex items-center justify-center w-10 h-10" id="themeToggle">
+                <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+                <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+            </button>
+            <button aria-label="Notifications" class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-slate-800 rounded-full p-2 focus:ring-2 focus:ring-primary/20 transition-all active:scale-95 flex items-center justify-center w-10 h-10 relative">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full ring-2 ring-surface dark:ring-slate-900"></span>
+            </button>
+            <button aria-label="Help" class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-slate-800 rounded-full p-2 focus:ring-2 focus:ring-primary/20 transition-all active:scale-95 flex items-center justify-center w-10 h-10">
+                <span class="material-symbols-outlined">help_outline</span>
+            </button>
+            <div class="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
+            <button class="flex items-center gap-2 hover:bg-surface-container-low dark:hover:bg-slate-800 p-1 pr-3 rounded-full transition-colors active:scale-95 relative group dropdown-container">
+                <img alt="Admin User Avatar" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-800 object-cover" data-alt="A professional headshot of a female tech executive with short dark hair, wearing a navy blazer, subtly lit with modern studio lighting against a neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3t7JkYQtx2X8FXFKPIiXoHBhYW38_ju8CRYpTrSYzUXNUqatUnWfgJlmiz6SvQKTHck71HeaBWPh7FPLK3zn51VPozQY39lazja1GBRl6MQCNBGkHVO_hGjHZHE7egNiGBicd0XXLfGWv2QvBr0q9Aw5R0IFtzAHdV-C5j71ns21E2YDiNJbR2eMOfVMe9VAEV4RFB1ffgNJAy3L5chG9eDNMmRY5ub-w98G9m6OCaz77Zq8T634XFg"/>
+                <div class="text-left hidden md:block">
+                    <p class="font-label-md text-label-md text-on-surface dark:text-slate-200 leading-none">Sarah Jenkins</p>
+                </div>
+                <span class="material-symbols-outlined text-[18px] text-secondary">expand_more</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Scrollable Canvas -->
+    <main class="flex-1 overflow-y-auto mt-16 p-margin-desktop w-full max-w-[1440px] mx-auto bg-background dark:bg-slate-950 relative">
+        
+        <!-- Section 1: Dashboard -->
+        <section class="content-section block animate-fade-in" id="dashboard-section">
+            <header class="mb-stack-lg">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">Overview</h2>
+                <p class="text-body-md font-body-md text-secondary dark:text-secondary-fixed-dim">Real-time metrics and system health.</p>
+            </header>
+            
+            <!-- Bento Grid Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-lg">
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-stack-md flex flex-col hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),_0_1px_2px_0_rgba(0,0,0,0.05)] hover:border-l-[3px] hover:border-l-primary-container transition-all duration-300 dark:border-t-[1px] dark:border-t-white/10 dark:shadow-none">
+                    <div class="flex items-center gap-3 text-secondary dark:text-secondary-fixed-dim mb-4">
+                        <span class="material-symbols-outlined text-primary dark:text-inverse-primary bg-primary/10 p-1.5 rounded-lg">account_balance_wallet</span>
+                        <h3 class="font-label-md text-label-md uppercase tracking-wider">Total Income</h3>
+                    </div>
+                    <p class="font-display text-display text-on-surface dark:text-slate-100 mb-1">$125k</p>
+                    <p class="text-label-md font-label-md text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">trending_up</span> +14.2% vs last month
+                    </p>
+                </div>
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-stack-md flex flex-col hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),_0_1px_2px_0_rgba(0,0,0,0.05)] hover:border-l-[3px] hover:border-l-error transition-all duration-300 dark:border-t-[1px] dark:border-t-white/10 dark:shadow-none">
+                    <div class="flex items-center gap-3 text-secondary dark:text-secondary-fixed-dim mb-4">
+                        <span class="material-symbols-outlined text-error bg-error/10 p-1.5 rounded-lg">money_off</span>
+                        <h3 class="font-label-md text-label-md uppercase tracking-wider">Discount Loss</h3>
+                    </div>
+                    <p class="font-display text-display text-error dark:text-error/90 mb-1">$12k</p>
+                    <p class="text-label-md font-label-md text-error dark:text-error/80 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">warning</span> Action required
+                    </p>
+                </div>
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-stack-md flex flex-col hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),_0_1px_2px_0_rgba(0,0,0,0.05)] hover:border-l-[3px] hover:border-l-primary-container transition-all duration-300 dark:border-t-[1px] dark:border-t-white/10 dark:shadow-none">
+                    <div class="flex items-center gap-3 text-secondary dark:text-secondary-fixed-dim mb-4">
+                        <span class="material-symbols-outlined text-primary dark:text-inverse-primary bg-primary/10 p-1.5 rounded-lg">robot_2</span>
+                        <h3 class="font-label-md text-label-md uppercase tracking-wider">Active Agents</h3>
+                    </div>
+                    <p class="font-display text-display text-on-surface dark:text-slate-100 mb-1">1,240</p>
+                    <p class="text-label-md font-label-md text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">check_circle</span> Stable fleet
+                    </p>
+                </div>
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-stack-md flex flex-col hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),_0_1px_2px_0_rgba(0,0,0,0.05)] hover:border-l-[3px] hover:border-l-error transition-all duration-300 dark:border-t-[1px] dark:border-t-white/10 dark:shadow-none">
+                    <div class="flex items-center gap-3 text-secondary dark:text-secondary-fixed-dim mb-4">
+                        <span class="material-symbols-outlined text-error bg-error/10 p-1.5 rounded-lg">error</span>
+                        <h3 class="font-label-md text-label-md uppercase tracking-wider">Failing Agents</h3>
+                    </div>
+                    <p class="font-display text-display text-error dark:text-error/90 mb-1">14</p>
+                    <p class="text-label-md font-label-md text-error dark:text-error/80 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">trending_down</span> Requires restart
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Activity Placeholder -->
+            <div class="bg-surface-container-lowest dark:bg-slate-900/50 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-stack-lg flex flex-col items-center justify-center min-h-[300px] text-center relative overflow-hidden">
+                <span class="material-symbols-outlined text-display text-slate-300 dark:text-slate-700 mb-4">analytics</span>
+                <h3 class="font-headline-md text-headline-md text-on-surface dark:text-slate-300 mb-2">Weekly Activity Data</h3>
+                <p class="text-body-md font-body-md text-secondary dark:text-secondary-fixed-dim max-w-md mx-auto">Connect your analytics provider to visualize agent invocation rates and token consumption over time.</p>
+                <button class="mt-6 px-6 py-2 bg-transparent border border-slate-300 dark:border-slate-600 rounded-lg text-primary dark:text-inverse-primary hover:bg-surface-container-low dark:hover:bg-slate-800 transition-colors">Configure Chart</button>
+            </div>
+        </section>
+
+        <!-- Section 2: Users -->
+        <section class="content-section hidden" id="users-section">
+            <header class="mb-stack-lg">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">User Management</h2>
+                <p class="text-body-md font-body-md text-secondary dark:text-secondary-fixed-dim">Manage platform access and subscription tiers.</p>
+            </header>
+            <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none dark:border-t-[1px] dark:border-t-white/10">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-surface-container-low dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <tr>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">User</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Plan</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50 font-body-md text-body-md">
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">A</div><span class="text-on-surface dark:text-slate-200 font-medium">Alice Smith</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">alice@example.com</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Pro</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-label-md text-label-md">Active</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="User Details: Alice Smith">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-error hover:bg-error-container/20">Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-600 flex items-center justify-center font-bold">B</div><span class="text-on-surface dark:text-slate-200 font-medium">Bob Jones</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">bob@corp.com</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Enterprise</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-label-md text-label-md">Active</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="User Details: Bob Jones">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-error hover:bg-error-container/20">Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-600 flex items-center justify-center font-bold">C</div><span class="text-on-surface dark:text-slate-200 font-medium">Charlie Day</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">charlie@test.net</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Pro</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-label-md text-label-md">Inactive</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="User Details: Charlie Day">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-error hover:bg-error-container/20">Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-orange-500/20 text-orange-600 flex items-center justify-center font-bold">D</div><span class="text-on-surface dark:text-slate-200 font-medium">Diana Prince</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">diana@amazon.org</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Enterprise</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-label-md text-label-md">Active</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="User Details: Diana Prince">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-error hover:bg-error-container/20">Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-green-500/20 text-green-600 flex items-center justify-center font-bold">E</div><span class="text-on-surface dark:text-slate-200 font-medium">Evan Wright</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">evan@startup.io</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Pro</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-label-md text-label-md">Active</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="User Details: Evan Wright">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-error hover:bg-error-container/20">Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 3: Agents -->
+        <section class="content-section hidden" id="agents-section">
+            <header class="mb-stack-lg">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">Agents Management</h2>
+                <p class="text-body-md font-body-md text-secondary dark:text-secondary-fixed-dim">Configure and monitor AI agent fleet.</p>
+            </header>
+            <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none dark:border-t-[1px] dark:border-t-white/10">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-surface-container-low dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <tr>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Agent Name</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Owner</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Skills</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50 font-body-md text-body-md">
+                        <!-- Agent 1 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">Customer Support Bot</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Alice Smith</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-label-md text-label-md">Active</span></td>
+                            <td class="px-6 py-4">
+                                <button class="toggle-skills text-primary text-sm flex items-center gap-1 hover:underline"><span class="material-symbols-outlined text-[16px]">expand_more</span> View (3)</button>
+                                <div class="collapsible-content transition-max-height text-sm text-secondary dark:text-slate-400">
+                                    <ul class="list-disc pl-4 mt-1"><li>Ticket Triage</li><li>FAQ Responder</li><li>Refund Processing</li></ul>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Configure Customer Support Bot">Configure</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Agent 2 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">Data Scraper Alpha</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Bob Jones</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-error/10 text-error font-label-md text-label-md">Failing</span></td>
+                            <td class="px-6 py-4">
+                                <button class="toggle-skills text-primary text-sm flex items-center gap-1 hover:underline"><span class="material-symbols-outlined text-[16px]">expand_more</span> View (2)</button>
+                                <div class="collapsible-content transition-max-height text-sm text-secondary dark:text-slate-400">
+                                    <ul class="list-disc pl-4 mt-1"><li>Web Crawler</li><li>Data Parser</li></ul>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Configure Data Scraper Alpha">Configure</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Agent 3 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">Sales Lead Gen</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Diana Prince</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-label-md text-label-md">Active</span></td>
+                            <td class="px-6 py-4">
+                                <button class="toggle-skills text-primary text-sm flex items-center gap-1 hover:underline"><span class="material-symbols-outlined text-[16px]">expand_more</span> View (1)</button>
+                                <div class="collapsible-content transition-max-height text-sm text-secondary dark:text-slate-400">
+                                    <ul class="list-disc pl-4 mt-1"><li>Email Outreach</li></ul>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Configure Sales Lead Gen">Configure</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Agent 4 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">Code Reviewer</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Evan Wright</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-label-md text-label-md">Inactive</span></td>
+                            <td class="px-6 py-4">
+                                <button class="toggle-skills text-primary text-sm flex items-center gap-1 hover:underline"><span class="material-symbols-outlined text-[16px]">expand_more</span> View (2)</button>
+                                <div class="collapsible-content transition-max-height text-sm text-secondary dark:text-slate-400">
+                                    <ul class="list-disc pl-4 mt-1"><li>Linting</li><li>Security Scan</li></ul>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Configure Code Reviewer">Configure</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 4: Skills -->
+        <section class="content-section hidden" id="skills-section">
+            <header class="mb-stack-lg">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">Skills Catalog</h2>
+            </header>
+            <div class="bg-primary/10 border border-primary/20 rounded-xl p-4 mb-6 text-on-surface dark:text-slate-200 flex items-start gap-3">
+                <span class="material-symbols-outlined text-primary mt-0.5">info</span>
+                <div>
+                    <h4 class="font-bold text-primary mb-1">What are Skills?</h4>
+                    <p class="text-sm">Skills are modular capabilities you can attach to your agents. Browse the catalog below and assign them to empower your agents with new integrations and tools.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Skill 1 -->
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col relative">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-on-surface dark:text-slate-100">Web Crawler</h3>
+                        <div class="relative inline-block text-left dropdown-container">
+                            <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                            <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                <a class="block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700" href="#">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-secondary dark:text-slate-400 mb-4 flex-1">Extracts structured data from any public website URL.</p>
+                    <div class="text-xs font-medium text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 inline-block px-2 py-1 rounded w-fit">Used by 45 agents</div>
+                </div>
+                <!-- Skill 2 -->
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col relative">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-on-surface dark:text-slate-100">Ticket Triage</h3>
+                        <div class="relative inline-block text-left dropdown-container">
+                            <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                            <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                <a class="block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700" href="#">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-secondary dark:text-slate-400 mb-4 flex-1">Automatically categorizes and routes support tickets to the right department.</p>
+                    <div class="text-xs font-medium text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 inline-block px-2 py-1 rounded w-fit">Used by 12 agents</div>
+                </div>
+                <!-- Skill 3 -->
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col relative">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-on-surface dark:text-slate-100">Email Outreach</h3>
+                        <div class="relative inline-block text-left dropdown-container">
+                            <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                            <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                <a class="block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700" href="#">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-secondary dark:text-slate-400 mb-4 flex-1">Connects to SMTP/API to send personalized outbound emails.</p>
+                    <div class="text-xs font-medium text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 inline-block px-2 py-1 rounded w-fit">Used by 8 agents</div>
+                </div>
+                <!-- Skill 4 -->
+                <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col relative">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-on-surface dark:text-slate-100">SQL Queries</h3>
+                        <div class="relative inline-block text-left dropdown-container">
+                            <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                            <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                <a class="block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700" href="#">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-secondary dark:text-slate-400 mb-4 flex-1">Allows the agent to construct and execute safe SELECT queries on read-only replicas.</p>
+                    <div class="text-xs font-medium text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 inline-block px-2 py-1 rounded w-fit">Used by 2 agents</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Contracts -->
+        <section class="content-section hidden" id="contracts-section">
+            <header class="mb-stack-lg">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">Contracts &amp; Billing</h2>
+                <p class="text-body-md font-body-md text-secondary dark:text-secondary-fixed-dim">Manage active agent contracts.</p>
+            </header>
+            <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none dark:border-t-[1px] dark:border-t-white/10">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-surface-container-low dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <tr>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Client</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Agent</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Skills</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Dates</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Total</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50 font-body-md text-body-md">
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Acme Corp</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Customer Support Bot</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">3</td>
+                            <td class="px-6 py-4 text-sm text-secondary dark:text-slate-400">Oct 1 - Oct 31, 2023</td>
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">$1,200.00</td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-primary hover:underline text-sm font-medium open-modal" data-modal-title="Billing Details: Acme Corp">View details</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Globex</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Data Scraper Alpha</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">2</td>
+                            <td class="px-6 py-4 text-sm text-secondary dark:text-slate-400">Sep 15 - Oct 15, 2023</td>
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">$850.00</td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-primary hover:underline text-sm font-medium open-modal" data-modal-title="Billing Details: Globex">View details</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Initech</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Sales Lead Gen</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">1</td>
+                            <td class="px-6 py-4 text-sm text-secondary dark:text-slate-400">Oct 5 - Nov 5, 2023</td>
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">$400.00</td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-primary hover:underline text-sm font-medium open-modal" data-modal-title="Billing Details: Initech">View details</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Soylent</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">Code Reviewer</td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400">2</td>
+                            <td class="px-6 py-4 text-sm text-secondary dark:text-slate-400">Aug 1 - Aug 31, 2023</td>
+                            <td class="px-6 py-4 font-medium text-on-surface dark:text-slate-200">$600.00</td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-primary hover:underline text-sm font-medium open-modal" data-modal-title="Billing Details: Soylent">View details</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 6: Errors -->
+        <section class="content-section hidden" id="errors-section">
+            <header class="mb-stack-lg flex justify-between items-end">
+                <div>
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">System Error Log</h2>
+                    <p class="text-body-md font-body-md text-secondary dark:text-secondary-fixed-dim">Showing 14 active failing agents matching dashboard metrics.</p>
+                </div>
+            </header>
+            <div class="bg-surface-container-lowest dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none dark:border-t-[1px] dark:border-t-white/10">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-surface-container-low dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <tr>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Timestamp</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Agent</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Severity</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider">Description</th>
+                            <th class="px-6 py-4 font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim uppercase tracking-wider text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50 font-body-md text-body-md">
+                        <!-- Log 1 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-xs font-code text-secondary dark:text-slate-400">2023-10-24 14:32:01</td>
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Data Scraper Alpha</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-error/10 text-error font-label-md text-label-md">Critical</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400 truncate max-w-[200px]">Connection timeout to target URL...</td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Error Details">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">Mark as resolved</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Log 2 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-xs font-code text-secondary dark:text-slate-400">2023-10-24 14:15:22</td>
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Customer Support Bot</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 font-label-md text-label-md">Warning</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400 truncate max-w-[200px]">API Rate limit approaching threshold.</td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Error Details">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">Mark as resolved</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Log 3 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-xs font-code text-secondary dark:text-slate-400">2023-10-24 13:45:10</td>
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Sales Lead Gen</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-label-md text-label-md">Info</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400 truncate max-w-[200px]">Agent restarted successfully.</td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Error Details">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">Mark as resolved</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Log 4 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-xs font-code text-secondary dark:text-slate-400">2023-10-24 12:12:00</td>
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Data Scraper Beta</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-error/10 text-error font-label-md text-label-md">Critical</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400 truncate max-w-[200px]">Authentication failed on remote DB.</td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Error Details">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">Mark as resolved</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Log 5 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-xs font-code text-secondary dark:text-slate-400">2023-10-24 11:05:44</td>
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Support Bot EMEA</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 font-label-md text-label-md">Warning</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400 truncate max-w-[200px]">High memory consumption detected.</td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Error Details">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">Mark as resolved</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Log 6 -->
+                        <tr class="hover:bg-surface-container-low/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-xs font-code text-secondary dark:text-slate-400">2023-10-24 09:30:00</td>
+                            <td class="px-6 py-4 text-on-surface dark:text-slate-200 font-medium">Sales Bot US</td>
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded bg-error/10 text-error font-label-md text-label-md">Critical</span></td>
+                            <td class="px-6 py-4 text-secondary dark:text-slate-400 truncate max-w-[200px]">Unhandled exception in logic flow.</td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="relative inline-block text-left dropdown-container">
+                                    <button class="dropdown-btn text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-700"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-surface dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-50 border border-slate-200 dark:border-slate-700">
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-on-surface dark:text-slate-200 hover:bg-surface-container-low dark:hover:bg-slate-700 open-modal" data-modal-title="Error Details">View details</button>
+                                        <button class="w-full text-left block px-4 py-2 text-sm text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">Mark as resolved</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Modal Container -->
+<div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="modal-container">
+    <div class="absolute inset-0 modal-overlay" id="modal-backdrop"></div>
+    <div class="relative bg-surface dark:bg-slate-900 w-full max-w-2xl rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]" id="modal-content">
+        <!-- Header -->
+        <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-headline-md text-headline-md text-on-surface dark:text-slate-100" id="modal-title">Modal Title</h3>
+            <button class="modal-close text-secondary hover:text-primary transition-colors p-1 rounded-md hover:bg-surface-container-high dark:hover:bg-slate-800"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        
+        <!-- Body -->
+        <div class="p-4 overflow-y-auto min-h-[150px]" id="modal-body">
+            
+            <div class="hidden" id="modal-user-content">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-16 h-16 rounded-full bg-primary/20 text-primary flex items-center justify-center text-2xl font-bold">U</div>
+                    <div>
+                        <h4 class="font-headline-md text-on-surface dark:text-slate-200">User Profile</h4>
+                        <span class="inline-flex items-center px-2 py-1 mt-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs">Active</span>
+                    </div>
+                </div>
+                <ul class="space-y-3 text-sm text-secondary dark:text-slate-400">
+                    <li class="flex flex-col border-b border-slate-100 dark:border-slate-800 pb-2"><span class="font-bold">Email:</span> <span>user@example.com</span></li>
+                    <li class="flex flex-col border-b border-slate-100 dark:border-slate-800 pb-2"><span class="font-bold">Current Plan:</span> <span>Enterprise</span></li>
+                    <li class="flex flex-col border-b border-slate-100 dark:border-slate-800 pb-2"><span class="font-bold">Member Since:</span> <span>March 12, 2023</span></li>
+                </ul>
+            </div>
+
+            <div class="hidden" id="modal-config-content">
+                <label class="block text-sm font-medium text-on-surface dark:text-slate-200 mb-2">System Prompt</label>
+                <textarea class="w-full h-48 bg-surface-container-low dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-on-surface dark:text-slate-200 font-code text-sm focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter system prompt directives..."></textarea>
+            </div>
+
+            <div class="hidden" id="modal-billing-content">
+                <h4 class="font-medium text-on-surface dark:text-slate-200 mb-4">Price Breakdown</h4>
+                <ul class="space-y-2 text-sm text-secondary dark:text-slate-400">
+                    <li class="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2"><span>Base Agent Cost</span> <span>$200.00</span></li>
+                    <li class="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2"><span>Skill: Web Crawler</span> <span>$150.00</span></li>
+                    <li class="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2"><span>Skill: Data Parser</span> <span>$50.00</span></li>
+                    <li class="flex justify-between font-bold text-on-surface dark:text-slate-200 pt-2"><span>Total Amount</span> <span>$400.00</span></li>
+                </ul>
+            </div>
+            
+            <div class="hidden" id="modal-error-content">
+                <h4 class="font-medium text-on-surface dark:text-slate-200 mb-2">Stack Trace</h4>
+                <div class="bg-slate-100 dark:bg-slate-950 p-4 rounded-lg font-code text-xs text-error dark:text-red-400 overflow-x-auto whitespace-pre">Exception in thread "main" java.net.SocketTimeoutException: connect timed out
+    at java.net.PlainSocketImpl.socketConnect(Native Method)
+    at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+    at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)</div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 p-4 border-t border-slate-200 dark:border-slate-800 bg-surface-container-low dark:bg-slate-800/50 rounded-b-xl" id="modal-footer">
+            <button class="modal-close px-4 py-2 rounded-lg text-secondary dark:text-slate-300 hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors font-label-md">Close</button>
+            <button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-label-md hover:bg-primary-container transition-colors shadow-sm hidden" id="modal-primary-btn">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const htmlTag = document.documentElement;
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlTag.classList.toggle('dark');
+        });
+
+        // Navigation Logic
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.content-section');
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Reset all nav buttons
+                navButtons.forEach(b => {
+                    b.className = "nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors duration-200 active:scale-95 transition-transform border-l-2 border-transparent";
+                    b.removeAttribute('aria-current');
+                });
+                
+                // Set active nav button
+                const targetBtn = e.currentTarget;
+                targetBtn.className = "nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary/10 text-primary border-l-2 border-primary font-bold active:scale-95 transition-transform";
+                targetBtn.setAttribute('aria-current', 'page');
+
+                // Hide all sections
+                sections.forEach(sec => sec.classList.add('hidden'));
+
+                // Show target section
+                const targetId = targetBtn.getAttribute('data-target');
+                const targetSec = document.getElementById(targetId);
+                if (targetSec) {
+                    targetSec.classList.remove('hidden');
+                    targetSec.classList.add('animate-fade-in'); 
+                }
+            });
+        });
+
+        // Dropdown Logic
+        const dropdownBtns = document.querySelectorAll('.dropdown-btn, #profileMenuBtn');
+        dropdownBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = btn.nextElementSibling || btn.querySelector('.dropdown-menu');
+                const isHidden = menu.classList.contains('hidden');
+                
+                // Close all other dropdowns
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+                
+                if (isHidden) {
+                    menu.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Close dropdowns on outside click or menu item click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-container')) {
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+            }
+        });
+        document.querySelectorAll('.dropdown-menu a, .dropdown-menu button').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+            });
+        });
+
+        // Modal Logic
+        const modalContainer = document.getElementById('modal-container');
+        const modalTitle = document.getElementById('modal-title');
+        const configContent = document.getElementById('modal-config-content');
+        const billingContent = document.getElementById('modal-billing-content');
+        const errorContent = document.getElementById('modal-error-content');
+        const userContent = document.getElementById('modal-user-content');
+        const primaryBtn = document.getElementById('modal-primary-btn');
+
+        document.querySelectorAll('.open-modal').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const title = btn.getAttribute('data-modal-title');
+                modalTitle.textContent = title || 'Details';
+                
+                // Hide all contents
+                configContent.classList.add('hidden');
+                billingContent.classList.add('hidden');
+                errorContent.classList.add('hidden');
+                userContent.classList.add('hidden');
+                primaryBtn.classList.add('hidden');
+
+                if(title && title.includes('Configure')) {
+                    configContent.classList.remove('hidden');
+                    primaryBtn.classList.remove('hidden');
+                    primaryBtn.textContent = 'Save Changes';
+                } else if (title && title.includes('Billing')) {
+                    billingContent.classList.remove('hidden');
+                } else if (title && title.includes('Error')) {
+                    errorContent.classList.remove('hidden');
+                } else if (title && title.includes('User')) {
+                    userContent.classList.remove('hidden');
+                }
+
+                modalContainer.classList.remove('hidden');
+                modalContainer.classList.add('flex');
+            });
+        });
+
+        const closeModal = () => {
+            modalContainer.classList.add('hidden');
+            modalContainer.classList.remove('flex');
+        };
+
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
+        document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+        // Collapsible Logic
+        document.querySelectorAll('.toggle-skills').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const content = btn.nextElementSibling;
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (content.classList.contains('open')) {
+                    content.classList.remove('open');
+                    icon.textContent = 'expand_more';
+                } else {
+                    content.classList.add('open');
+                    icon.textContent = 'expand_less';
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
